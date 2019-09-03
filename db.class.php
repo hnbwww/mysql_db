@@ -65,7 +65,7 @@ class Db{
       $fieldsStr = $fields;
     }
     $sql = "SELECT {$fields} FROM {$this->_table} {$this->_where} {$this->_order} {$this->_limit}";
-    $data = mysqli_fetch_all($this->execute($sql));
+    $data = mysqli_fetch_all($this->execute($sql),MYSQLI_ASSOC);
     return $data;
   }
   /**
@@ -169,7 +169,7 @@ class Db{
   }
 
   /**
-   * 执行sql语句
+   * 执行sql语句  有数据则返回数据 没有返回结果0 1
    *
    * @param   <type>  $sql  The sql
    *
@@ -177,7 +177,9 @@ class Db{
    */
   public function query($sql=null){
     $res = $this->execute($sql);
-    return $res;
+    $data = mysqli_fetch_all($res,MYSQLI_ASSOC);
+	
+    return $data?$data:$res;
   }  
   
   /**
@@ -255,19 +257,89 @@ class Db{
 }
 
 
-//$db = new Db();
+$db = new Db();
 
 // //查询操作
-// var_dump($db->table('user')->where('id > 2')->order('id desc')->limit('2,4')->select());
+// var_dump($db->table('yio_orders')->where('id > 2')->order('id desc')->limit('2,4')->select());
 // //插入操作
-// var_dump($db->table('user')->insert(array('username'=>'user','password'=>'pwd')));
+// var_dump($db->table('yio_orders')->insert(array('order_id'=>'1235','type'=>'alipay')));
 // //更新操作
-// var_dump($db->table('user')->where('id = 1')->update(array('username'=>'user1','password'=>'pwd1')));
+// var_dump($db->table('yio_orders')->where('order_id = 1')->update(array('type'=>'wechat','order_price'=>'1.00')));
 // //删除操作
-// var_dump($db->table('user')->where('id = 1')->delete());
+// var_dump($db->table('yio_orders')->where('order_id = 1235')->delete());
+
+
+//查询操作
+//$orders = $db->table('yio_orders')->where('id > 2')->order('id desc')->limit('5')->select();
+
+//插入操作
+var_dump($db->table('yio_orders')->insert(array('order_id'=>'1235s','order_type'=>'alipay')));
+//更新操作
+var_dump($db->table('yio_orders')->where("order_id = '1235s'")->update(array('order_type'=>'wechat','order_price'=>'1.00')));
+//删除操作
+var_dump($db->table('yio_orders')->where("order_id = '1235s'")->delete());
+//执行SQL
+
+//print_r($db->table('yio_orders')->query("select * from  yio_orders where order_id like '%1235%' "));
+
+
+//print_r($db->table('yio_orders')->query("delete  from  yio_orders where id= 445"));
 
 
 
+$orders = $db->table('yio_orders')->where('id > 2')->order('id desc')->limit('5')->select();
+
+print_r($orders[0]);
+
+
+echo "<style>td{border-left:1px solid #ccc;border-top:1px solid #ccc}</style><table>";
+
+
+echo '<table><tr><td>[id]</td><td>[order_id]</td><td>[order_type]</td><td>[qr_price]</td><td>[create_at]</td><td>[update_at]</td></tr>';
+
+
+foreach ($orders as $k => $v) {
+
+echo "<tr>";
+ 
+
+$array = array($v['id'],$v['order_id'],$v['order_type'],$v['qr_price'],$v['created_at'],$v['updated_at']);
+
+
+$table = table_show($array);
+
+echo $table;
+ 
+	
+echo "</tr>";	
+	
+}
+
+
+
+function table_show($array)
+
+{
+
+
+$str ='';
+
+foreach ($array as $k => $v) {
+	
+$str.= "<td>".$v."</td>";
+
+}	
+
+return $str;
+	
+	
+}
+
+
+
+
+
+echo "</table>";
 
 
 
