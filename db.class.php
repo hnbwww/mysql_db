@@ -12,9 +12,9 @@ class Db{
   private $_group = null;//group分组
   private $_configs = array(
         'hostname' => 'localhost',
-        'dbname'  => 'zhongpai361',
-        'username' => 'zhongpai361',
-        'password' => '19880124'
+        'dbname'  => 'xx',
+        'username' => 'xx',
+        'password' => 'xx'
       );//数据库配置
   /**
    * 构造函数，连接数据库
